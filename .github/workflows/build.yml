@@ -11,27 +11,29 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Imposta Python
+    - name: Imposta Python 3.10
       uses: actions/setup-python@v5
       with:
         python-version: '3.10'
 
-    - name: Installa dipendenze di sistema
+    - name: Installa dipendenze di sistema Android
       run: |
         sudo apt-get update
-        sudo apt-get install -y git zip unzip openjdk-17-jdk autoconf libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 cmake libffi-dev libssl-dev
+        sudo apt-get install -y \
+          git wget curl unzip libltdl7 \
+          openjdk-17-jdk \
+          autoconf libtool pkg-config \
+          zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 \
+          cmake libffi-dev libssl-dev lld
 
-    - name: Installa Buildozer e Cython
+    - name: Installa Buildozer, Cython e strumenti
       run: |
-        pip install --upgrade pip
-        pip install --upgrade buildozer cython
+        python -m pip install --upgrade pip
+        pip install --upgrade cython==0.29.36 buildozer
 
-    - name: Compila APK con Buildozer
-      uses: ArtemSBulgakov/buildozer-action@v1
-      id: buildozer
-      with:
-        command: buildozer -v android debug
-        buildozer_version: master
+    - name: Compila APK con Buildozer (Nativo)
+      run: |
+        buildozer -v android debug
 
     - name: Salva l'APK compilato
       uses: actions/upload-artifact@v4
