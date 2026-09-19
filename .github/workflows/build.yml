@@ -23,7 +23,7 @@ jobs:
           git wget curl unzip libltdl7 \
           openjdk-17-jdk \
           autoconf libtool pkg-config \
-          zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 \
+          zlib1g-dev libncurses5-dev libncursesw5-dev \
           cmake libffi-dev libssl-dev lld
 
     - name: Installa Buildozer, Cython e strumenti
