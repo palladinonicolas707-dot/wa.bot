@@ -32,18 +32,27 @@ jobs:
           zlib1g-dev libncurses5-dev libncursesw5-dev libtinfo5 \
           cmake libffi-dev libssl-dev
 
-    - name: Installa l'ultima versione di Buildozer e Cython
+    - name: Installa Buildozer e Cython
       run: |
         python -m pip install --upgrade pip
-        pip install --upgrade cython==0.29.36
-        pip install --upgrade git+https://github.com/kivy/buildozer.git@master
+        pip install --upgrade cython==0.29.36 buildozer
 
-    - name: Pre-accetta licenze Android SDK
+    - name: Prepara la struttura corretta di Android SDK e Command-Line Tools
       run: |
-        mkdir -p /home/runner/.buildozer/android/platform/android-sdk/licenses
-        echo "24333f8a43b681ff21c2d91dabcb162822052738" > /home/runner/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
-        echo "84831b9409646a918e30573bab4c9c91346d8abd" >> /home/runner/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
-        echo "d56f5187479451eabf01fb78af6dfcb131a648b0" >> /home/runner/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
+        SDK_DIR="/home/runner/.buildozer/android/platform/android-sdk"
+        mkdir -p $SDK_DIR/cmdline-tools/latest
+        
+        # Scarica e installa i command-line tools ufficiali se non presenti
+        wget -q https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -O /tmp/cmdtools.zip
+        unzip -q /tmp/cmdtools.zip -d /tmp/cmdtools_extracted
+        rm -rf $SDK_DIR/cmdline-tools/latest/*
+        mv /tmp/cmdtools_extracted/cmdline-tools/* $SDK_DIR/cmdline-tools/latest/
+        
+        # Accetta automaticamente le licenze per evitare blocchi
+        mkdir -p $SDK_DIR/licenses
+        echo "24333f8a43b681ff21c2d91dabcb162822052738" > $SDK_DIR/licenses/android-sdk-license
+        echo "84831b9409646a918e30573bab4c9c91346d8abd" >> $SDK_DIR/licenses/android-sdk-license
+        echo "d56f5187479451eabf01fb78af6dfcb131a648b0" >> $SDK_DIR/licenses/android-sdk-license
 
     - name: Compila APK
       run: |
