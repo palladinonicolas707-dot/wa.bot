@@ -36,6 +36,13 @@ jobs:
         python -m pip install --upgrade pip
         pip install --upgrade cython==0.29.36 buildozer
 
+    - name: Pre-accetta licenze Android SDK
+      run: |
+        mkdir -p /home/runner/.buildozer/android/platform/android-sdk/licenses
+        echo "24333f8a43b681ff21c2d91dabcb162822052738" > /home/runner/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
+        echo "84831b9409646a918e30573bab4c9c91346d8abd" >> /home/runner/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
+        echo "d56f5187479451eabf01fb78af6dfcb131a648b0" >> /home/runner/.buildozer/android/platform/android-sdk/licenses/android-sdk-license
+
     - name: Compila APK
       run: |
         buildozer -v android debug
